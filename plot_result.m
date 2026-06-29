@@ -1,0 +1,102 @@
+function figs = plot_result(result)
+%PLOT_RESULT  Plot FOV regions and convergence curves for a given matrix.
+
+lg_linewidth = 1.6;
+lg_linewidth_bnd = 1.2;
+lg_markersize = 5;
+lg_fontsize = 11;
+
+axlabel_linewidth = 1.0;
+axlabel_fontsize = 10;
+
+color_K = [0.635 0.078 0.184];
+color_K_bnd = [0.85 0.325 0.098];
+color_MK = [0 0.4470 0.7410];
+color_W = [0 0 0];
+color_W_bnd = [0.5 0.5 0.5];
+color_A = [0.13 0.55 0.13];
+
+%% FOV comparison
+
+figs.fov = figure;
+clf(figs.fov)
+set(figs.fov, 'Color', 'w', 'Units', 'inches', 'Position', [1,1,5.5,4.5]);
+hold on
+
+% Filled F(A) region, drawn first so the other FOV curves stay visible.
+fill(real(result.range_A), imag(result.range_A), color_A, ...
+    'FaceAlpha', 0.12, 'EdgeColor', 'none', 'HandleVisibility', 'off');
+plot(real(result.range_K), imag(result.range_K), '-', 'Color', color_K, ...
+    'LineWidth', lg_linewidth);
+plot(real(result.range_MK), imag(result.range_MK), '-', 'Color', color_MK, ...
+    'LineWidth', lg_linewidth);
+plot(real(result.range_W), imag(result.range_W), '-', 'Color', color_W, ...
+    'LineWidth', lg_linewidth);
+plot(real(result.range_A), imag(result.range_A), '-', 'Color', color_A, ...
+    'LineWidth', lg_linewidth);
+plot(real(result.bnd_K), imag(result.bnd_K), '--', 'Color', color_K_bnd, ...
+    'LineWidth', lg_linewidth_bnd);
+plot(real(result.bnd_W), imag(result.bnd_W), '--', 'Color', color_W_bnd, ...
+    'LineWidth', lg_linewidth_bnd);
+plot(real(result.eig_K), imag(result.eig_K), 'x', 'Color', color_K, ...
+    'LineWidth', lg_linewidth, 'MarkerSize', 4); % Eigenvalues of the KIOPS matrix K.
+
+% axis equal
+grid on
+% box on
+xlabel('Real part', 'interpreter', 'latex');
+ylabel('Imaginary part', 'interpreter', 'latex');
+% title(sprintf('%s, $n=%d$, $s=%d$', result.mat_label, result.n, result.s), 'interpreter', 'latex');
+legend({'$\mathcal F(K)$', '$\mathcal F_{M_{\rm K}}(K)$', '$\mathcal F(W)$', ...
+    '$\mathcal F(A)$', '$K$ FOV bound', '$W$ FOV bound', '$\lambda(K)$'}, ...
+    'interpreter', 'latex', 'FontSize', lg_fontsize, 'Location', 'northwest');
+
+set(gca,'linewidth', axlabel_linewidth)
+set(gca,'fontsize', axlabel_fontsize)
+
+%% error and estimate comparison
+
+figs.error = figure;
+clf(figs.error)
+set(figs.error, 'Color', 'w', 'Units', 'inches', 'Position', [1,1,5.5,4.5]);
+hold on
+
+ga(1) = semilogy(result.mvals, result.err_kiops, 'o-', 'Color', color_K, ...
+    'LineWidth', lg_linewidth, 'MarkerSize', lg_markersize);
+ga(2) = semilogy(result.mvals, result.err_W, 's-', 'Color', color_W, ...
+    'LineWidth', lg_linewidth, 'MarkerSize', lg_markersize);
+ga(3) = semilogy(result.mvals, result.err_X, '^-', 'Color', color_MK, ...
+    'LineWidth', lg_linewidth, 'MarkerSize', lg_markersize);
+ga(4) = semilogy(result.mvals, result.est_K, '--', 'Color', color_K, ...
+    'LineWidth', lg_linewidth_bnd);
+ga(5) = semilogy(result.mvals, result.est_MK, '-.', 'Color', color_MK, ...
+    'LineWidth', lg_linewidth_bnd);
+ga(6) = semilogy(result.mvals, result.est_W, '-.', 'Color', color_W, ...
+    'LineWidth', lg_linewidth_bnd);
+
+% Error panel in logarithmic scale.
+set(gca, 'YScale', 'log')
+
+legend(ga, {'KIOPS basis ($K$)', 'Block formulation ($W$)', ...
+    'Orthogonal basis ($K_{\rm X}$)', '$\mathcal F(K)$ estimate', ...
+    '$\mathcal F_{M_{\rm K}}(K)$ estimate', '$\mathcal F(W)$ estimate'}, ...
+    'interpreter', 'latex', 'FontSize', lg_fontsize, 'Location', 'southwest');
+
+grid on
+box on
+xlabel('Krylov dimension $m$', 'interpreter', 'latex');
+ylabel('Relative error and FOV estimate', 'interpreter', 'latex');
+% title(sprintf('%s, $n=%d$, $s=%d$', result.mat_label, result.n, result.s), 'interpreter', 'latex');
+
+set(gca,'linewidth', axlabel_linewidth)
+set(gca,'fontsize', axlabel_fontsize)
+xlim([min(result.mvals), max(result.mvals)])
+
+positive_vals = [result.err_kiops(:); result.err_W(:); result.err_X(:); ...
+    result.est_K(:); result.est_MK(:); result.est_W(:)];
+positive_vals = positive_vals(isfinite(positive_vals) & positive_vals > 0);
+if ~isempty(positive_vals)
+    ylim([max(1e-16, min(positive_vals)/5), max(positive_vals)*5])
+end
+
+end
