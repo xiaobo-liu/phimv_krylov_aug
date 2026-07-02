@@ -1,5 +1,5 @@
 function out = bestpoly_bnd_fov(z, deg, opts)
-%BESTPOLY_BND_FOV Adaptive sampled best-polynomial bound on a FOV boundary.
+%BESTPOLY_BND_FOV Adaptive sampled best-polynomial bound on a field-of-values boundary.
 %
 %   out = bestpoly_bnd_fov(z,deg,opts) approximates the degree-deg
 %   minimax error for exp on the polygonal boundary z.  The experiments use
@@ -34,7 +34,7 @@ function out = bestpoly_bnd_fov(z, deg, opts)
     end
 
     zgrid = samplePolygonTotal(z, opts.InitialN);
-    % Always include the vertices, since FOV corners can control the error.
+    % Always include the vertices, since field-of-values corners can control the error.
     zgrid = uniqueComplexTol([zgrid; z(1:end-1)], opts.TolUnique);
 
     % Direction angles approximate the complex modulus by supporting lines.
@@ -285,8 +285,8 @@ function [basis, Q] = discreteArnoldiBasis(xi, deg)
     Q = zeros(N, deg+1);
     H = zeros(deg+1, deg);
 
-    beta = sqrt(N);
-    Q(:,1) = ones(N,1) / beta;
+    q0_norm = sqrt(N);
+    Q(:,1) = ones(N,1) / q0_norm;
 
     for k = 1:deg
         v = xi .* Q(:,k);
@@ -308,7 +308,7 @@ function [basis, Q] = discreteArnoldiBasis(xi, deg)
     end
 
     basis.H = H;
-    basis.beta = beta;
+    basis.q0_norm = q0_norm;
     basis.deg = deg;
 end
 
@@ -332,7 +332,7 @@ function Q = evalArnoldiBasis(xi, basis)
     H = basis.H;
 
     Q = zeros(numel(xi), deg+1);
-    Q(:,1) = 1 / basis.beta;
+    Q(:,1) = 1 / basis.q0_norm;
 
     for k = 1:deg
         v = xi .* Q(:,k);

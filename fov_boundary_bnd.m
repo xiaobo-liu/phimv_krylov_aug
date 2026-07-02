@@ -1,5 +1,5 @@
 function z = fov_boundary_bnd(points, radius, num_theta)
-%FOV_BOUNDARY_BND Boundary of the FOV bound conv(points) + disk(0,radius).
+%FOV_BOUNDARY_BND Boundary of the bound conv(points) + disk(0,radius).
 
 theta = linspace(0, 2*pi, num_theta+1);
 theta(end) = [];

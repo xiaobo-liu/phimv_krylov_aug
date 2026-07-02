@@ -1,13 +1,13 @@
 function [A, label] = testmat(matname, n, matrix_scale)
-%TESTMAT  Gallery matrices used in the FOV/Krylov experiments.
+%TESTMAT  Gallery matrices used in the field-of-values/Krylov experiments.
 
 switch lower(matname)
     
-    case {'laplace', 'poisson'}
-        laplace_grid = 7;
-        A0 = gallery('poisson', laplace_grid);
+    case 'poisson'
+        poisson_grid = 7;
+        A0 = gallery('poisson', poisson_grid);
         sign = -1;
-        label = sprintf('-scaled gallery(''poisson'', %d)', laplace_grid);
+        label = sprintf('-scaled gallery(''poisson'', %d)', poisson_grid);
         
     case 'kms'
         rho = 0.88;
@@ -34,7 +34,7 @@ switch lower(matname)
         error('Unknown test matrix "%s".', matname);
 end
 
-% The scale keeps expm(K) well behaved while preserving FOV shape.
+% The scale keeps expm(K) well behaved while preserving field-of-values shape.
 A = sparse(sign * matrix_scale * A0 / norm(full(A0), 2));
 
 end

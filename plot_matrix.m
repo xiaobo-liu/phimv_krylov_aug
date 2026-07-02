@@ -1,5 +1,5 @@
-function figs = plot_result(result)
-%PLOT_RESULT  Plot FOV regions and convergence curves for a given matrix.
+function figs = plot_matrix(result)
+%PLOT_MATRIX Plot field-of-values regions and convergence curves.
 
 lg_linewidth = 1.6;
 lg_linewidth_bnd = 1.2;
@@ -16,14 +16,14 @@ color_W = [0 0 0];
 color_W_bnd = [0.5 0.5 0.5];
 color_A = [0.13 0.55 0.13];
 
-%% FOV comparison
+%% Field-of-values comparison
 
 figs.fov = figure;
 clf(figs.fov)
 set(figs.fov, 'Color', 'w', 'Units', 'inches', 'Position', [1,1,5.5,4.5]);
 hold on
 
-% Filled F(A) region, drawn first so the other FOV curves stay visible.
+% Filled F(A) region, drawn first so the other field-of-values curves stay visible.
 fill(real(result.range_A), imag(result.range_A), color_A, ...
     'FaceAlpha', 0.12, 'EdgeColor', 'none', 'HandleVisibility', 'off');
 plot(real(result.range_K), imag(result.range_K), '-', 'Color', color_K, ...
@@ -48,7 +48,9 @@ xlabel('Real part', 'interpreter', 'latex');
 ylabel('Imaginary part', 'interpreter', 'latex');
 % title(sprintf('%s, $n=%d$, $s=%d$', result.mat_label, result.n, result.s), 'interpreter', 'latex');
 legend({'$\mathcal F(K)$', '$\mathcal F_{M_{\rm K}}(K)$', '$\mathcal F(W)$', ...
-    '$\mathcal F(A)$', '$K$ FOV bound', '$W$ FOV bound', '$\lambda(K)$'}, ...
+    '$\mathcal F(A)$', 'bound on $\mathcal F(K)$', ...
+    'bound on $\mathcal F(W)$', ...
+    '$\lambda(K)$'}, ...
     'interpreter', 'latex', 'FontSize', lg_fontsize, 'Location', 'northwest');
 
 set(gca,'linewidth', axlabel_linewidth)
@@ -78,25 +80,37 @@ ga(6) = semilogy(result.mvals, result.est_W, '-.', 'Color', color_W, ...
 set(gca, 'YScale', 'log')
 
 legend(ga, {'KIOPS basis ($K$)', 'Block formulation ($W$)', ...
-    'Orthogonal basis ($K_{\rm X}$)', '$\mathcal F(K)$ estimate', ...
-    '$\mathcal F_{M_{\rm K}}(K)$ estimate', '$\mathcal F(W)$ estimate'}, ...
+    'Orthonormal basis ($K_{\rm X}$)', 'bound based on $\mathcal F(K)$', ...
+    'bound based on $\mathcal F_{M_{\rm K}}(K)$', ...
+    'bound based on $\mathcal F(W)$'}, ...
     'interpreter', 'latex', 'FontSize', lg_fontsize, 'Location', 'southwest');
 
 grid on
 box on
 xlabel('Krylov dimension $m$', 'interpreter', 'latex');
-ylabel('Relative error and FOV estimate', 'interpreter', 'latex');
+ylabel('Relative error and field-of-values estimate', 'interpreter', 'latex');
 % title(sprintf('%s, $n=%d$, $s=%d$', result.mat_label, result.n, result.s), 'interpreter', 'latex');
 
 set(gca,'linewidth', axlabel_linewidth)
 set(gca,'fontsize', axlabel_fontsize)
-xlim([min(result.mvals), max(result.mvals)])
+set_m_axis(result.mvals)
 
 positive_vals = [result.err_kiops(:); result.err_W(:); result.err_X(:); ...
     result.est_K(:); result.est_MK(:); result.est_W(:)];
 positive_vals = positive_vals(isfinite(positive_vals) & positive_vals > 0);
 if ~isempty(positive_vals)
     ylim([max(1e-16, min(positive_vals)/5), max(positive_vals)*5])
+end
+
+end
+
+function set_m_axis(mvals)
+%SET_M_AXIS Set a stable x-axis range for one or more Krylov dimensions.
+
+if min(mvals) < max(mvals)
+    xlim([min(mvals), max(mvals)])
+else
+    xlim([mvals(1)-0.5, mvals(1)+0.5])
 end
 
 end

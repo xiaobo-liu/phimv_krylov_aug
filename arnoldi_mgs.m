@@ -1,24 +1,23 @@
-function [V, H, m_done, beta] = arnoldi_mgs(A, b, m, tol)
-%ARNOLDI_MGS  Arnoldi iteration via modified Gram-Schmidt with 
-% reorthogonalization.
+function [V, H, m_done, start_norm] = arnoldi_mgs(A, b, m, tol)
+%ARNOLDI_MGS Arnoldi iteration via modified Gram-Schmidt with reorthogonalization.
 
 if nargin < 4 || isempty(tol)
     tol = 0;
 end
 
 N = size(A,1);
-beta = norm(b);
+start_norm = norm(b);
 
 V = zeros(N, m+1);
 H = zeros(m+1, m);
 m_done = m;
 
-if beta == 0
+if start_norm == 0
     m_done = 0;
     return
 end
 
-V(:,1) = b / beta;
+V(:,1) = b / start_norm;
 
 for j = 1:m
     w = A * V(:,j);

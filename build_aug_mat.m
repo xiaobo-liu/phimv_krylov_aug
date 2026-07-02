@@ -26,6 +26,7 @@ is_orth_basis = any(strcmp(basis, {'orth', 'kx'}));
 
 build_kiops = build_all || is_kiops_basis;
 build_orth = build_all || is_orth_basis;
+% The orthonormal basis is built from the block data bb, J, and E.
 build_block = build_all || is_block_basis || build_orth;
 
 if ~(build_all || is_kiops_basis || is_block_basis || is_orth_basis)
@@ -63,31 +64,37 @@ if build_orth
         XK(:,j) = aug.J^(s-j) * aug.bb;
     end
 
-    % Cholesky QR for orthonormal basis X for range(X_K).
-    R = chol(XK'*XK);
-    X = XK / R;
+    % G_K is the Gram matrix of the KIOPS lower basis X_K.
+    GK = XK' * XK;
+
+    % Cholesky QR for an orthonormal basis X for range(X_K).
+    % The upper factor C_K satisfies C_K^* C_K = G_K.
+    CK = chol(GK);
+    X = XK / CK;
 
     % K_X is the reduced matrix for the orthonormal basis X.
-    G = X' * (aug.J*X);
+    N = X' * (aug.J*X);
     BX = aug.E * X;
     gamma = X' * aug.bb;
-    KX = [A, BX; sparse(s,n), G];
+    KX = [A, BX; sparse(s,n), N];
 
     aug.KX = KX;
     aug.cX = [b0; gamma];
     aug.XK = XK;
+    aug.GK = GK;
+    aug.CK = CK;
     aug.X = X;
     aug.BX = BX;
-    aug.G = G;
+    aug.N = N;
     aug.gamma = gamma;
     aug.QX = [speye(n), sparse(n,s); sparse(n*s,n), sparse(X)];
 
     if build_all
         % M_K is the metric matrix for the KIOPS coordinates.
-        RK = blkdiag(speye(n), R);
+        RK = blkdiag(speye(n), CK);
         MK = RK' * RK;
 
-        % F_{M_K}(K) is computed as the Euclidean FOV of R_K*K*R_K^{-1}.
+        % F_{M_K}(K) is computed as the Euclidean field of values of R_K*K*R_K^{-1}.
         RK_K_RKinv = RK * aug.K / RK;
 
         aug.QK = [speye(n), sparse(n,s); sparse(n*s,n), sparse(XK)];

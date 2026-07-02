@@ -1,6 +1,5 @@
-function est = converg_bestpoly_bnd(boundary, beta, norm_ref, mvals, c_cr)
-%CONVERG_BESTPOLY_BND  FOV convergence estimates using best polynomial 
-% samples.
+function est = converg_bestpoly_bnd(boundary, start_norm, norm_ref, mvals, c_cr)
+%CONVERG_BESTPOLY_BND  Field-of-values convergence estimates.
 
 z = boundary(:);
 est = zeros(size(mvals));
@@ -16,8 +15,9 @@ opts.Verbose = false;
 
 for k = 1:length(mvals)
     m = mvals(k);
+    % An m-dimensional Krylov approximation corresponds to degree m-1.
     out = bestpoly_bnd_fov(z, m-1, opts);
-    est(k) = c_cr * beta * out.upper / norm_ref;
+    est(k) = c_cr * start_norm * out.upper / norm_ref;
 end
 
 est(~isfinite(est)) = realmax;

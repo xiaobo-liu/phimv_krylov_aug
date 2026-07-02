@@ -8,7 +8,7 @@ function [y, est] = phimv_kry_aug(A, U, s, m, tol, basis)
 %   The basis argument chooses the augmented realization used by Arnoldi:
 %       'kiops' or 'k'   Arnoldi on the KIOPS coordinate matrix K.
 %       'block' or 'w'   Arnoldi on the large block matrix W.
-%       'orth'  or 'kx'  Arnoldi on the orthogonally compressed matrix K_X.
+%       'orth'  or 'kx'  Arnoldi on the orthonormal-basis matrix K_X.
 %
 %   If basis is omitted, the default is 'kiops'.  For convenience,
 %   phimv_kry_aug(A,U,s,m,basis) is also accepted.
@@ -63,15 +63,15 @@ switch basis
         error('Unknown basis "%s". Use "kiops"/"k", "block"/"w", or "orth"/"kx".', basis);
 end
 
-beta = norm(b,2);
-if beta == 0
+start_norm = norm(b,2);
+if start_norm == 0
     y = zeros(n,1);
     est = 0;
     return
 end
 
 % Modified Gram-Schmidt Arnoldi.
-[V, H, m, beta] = arnoldi_mgs(M, b, m, tol);
+[V, H, m, start_norm] = arnoldi_mgs(M, b, m, tol);
 
 % exp(H_m)e_1 gives the coefficient vector in the Arnoldi basis.
 e1 = zeros(m,1);
@@ -80,8 +80,8 @@ g = expm(H(1:m,1:m)) * e1;
 
 % Only the first n entries represent the desired linear combination.
 V_top = V(1:n, 1:m);
-y = beta * (V_top * g);
+y = start_norm * (V_top * g);
 
-% Error estimate beta * h_{m+1,m} * |g_m|
-est = beta * H(m+1,m) * abs(g(m));
+% Error estimate start_norm * h_{m+1,m} * |g_m|.
+est = start_norm * H(m+1,m) * abs(g(m));
 end
