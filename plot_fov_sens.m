@@ -24,13 +24,16 @@ clf(fig)
 set(fig, 'Color', 'w', 'Units', 'inches', ...
     'Position', [1, 1, 3.8*num_cols, 3.3*num_rows]);
 
-tiledlayout(fig, num_rows, num_cols, ...
+tlo = tiledlayout(fig, num_rows, num_cols, ...
     'TileSpacing', 'compact', 'Padding', 'compact');
 
 for k = 1:num_cases
     result = results{k};
 
-    nexttile
+    ax = nexttile(tlo);
+    if k == 1
+        legend_ax = ax;
+    end
     hold on
     % Filled F(A) region, drawn first so the other field-of-values curves stay visible.
     fill(real(result.range_A), imag(result.range_A), color_A, ...
@@ -48,19 +51,22 @@ for k = 1:num_cases
     plot(real(result.bnd_W), imag(result.bnd_W), '--', ...
         'Color', color_W_bnd, 'LineWidth', lg_linewidth_bnd);
     grid on
-    xlabel('Real part', 'interpreter', 'latex');
-    ylabel('Imaginary part', 'interpreter', 'latex');
-    title(case_title(result, sens_name), 'interpreter', 'latex');
-    if k == 1
-        legend({'$\mathcal F(K)$', '$\mathcal F_{M_{\rm K}}(K)$', ...
-            '$\mathcal F(W)$', '$\mathcal F(A)$', ...
-            'bound on $\mathcal F(K)$', 'bound on $\mathcal F(W)$'}, ...
-            'interpreter', 'latex', 'FontSize', lg_fontsize, ...
-            'Location', 'northwest');
-    end
-    set(gca, 'linewidth', axlabel_linewidth)
-    set(gca, 'fontsize', axlabel_fontsize)
+    box on
+    xlabel('Real part', 'Interpreter', 'latex');
+    ylabel('Imaginary part', 'Interpreter', 'latex');
+    title(case_title(result, sens_name), 'Interpreter', 'latex');
+    ax.LineWidth = axlabel_linewidth;
+    ax.FontSize = axlabel_fontsize;
 end
+
+lgd = legend(legend_ax, ...
+    {'$\mathcal F(K)$', '$\mathcal F_{M_{\rm K}}(K)$', ...
+    '$\mathcal F(W)$', '$\mathcal F(A)$', ...
+    'bound on $\mathcal F(K)$', 'bound on $\mathcal F(W)$'}, ...
+    'Interpreter', 'latex', 'FontSize', lg_fontsize, ...
+    'Location', 'northwest');
+drawnow;
+increase_legend_width(lgd, 1.1);
 
 end
 

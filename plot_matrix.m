@@ -43,18 +43,20 @@ plot(real(result.eig_K), imag(result.eig_K), 'x', 'Color', color_K, ...
 
 % axis equal
 grid on
-% box on
-xlabel('Real part', 'interpreter', 'latex');
-ylabel('Imaginary part', 'interpreter', 'latex');
+box on
+xlabel('Real part', 'Interpreter', 'latex');
+ylabel('Imaginary part', 'Interpreter', 'latex');
+ax = gca;
+ax.LineWidth = axlabel_linewidth;
+ax.FontSize = axlabel_fontsize;
 % title(sprintf('%s, $n=%d$, $s=%d$', result.mat_label, result.n, result.s), 'interpreter', 'latex');
-legend({'$\mathcal F(K)$', '$\mathcal F_{M_{\rm K}}(K)$', '$\mathcal F(W)$', ...
+lgd = legend({'$\mathcal F(K)$', '$\mathcal F_{M_{\rm K}}(K)$', '$\mathcal F(W)$', ...
     '$\mathcal F(A)$', 'bound on $\mathcal F(K)$', ...
     'bound on $\mathcal F(W)$', ...
     '$\lambda(K)$'}, ...
-    'interpreter', 'latex', 'FontSize', lg_fontsize, 'Location', 'northwest');
-
-set(gca,'linewidth', axlabel_linewidth)
-set(gca,'fontsize', axlabel_fontsize)
+    'Interpreter', 'latex', 'FontSize', lg_fontsize, 'Location', 'northwest');
+drawnow;
+increase_legend_width(lgd, 1.1);
 
 %% error and estimate comparison
 
@@ -78,21 +80,14 @@ ga(6) = semilogy(result.mvals, result.est_W, '-.', 'Color', color_W, ...
 
 % Error panel in logarithmic scale.
 set(gca, 'YScale', 'log')
-
-legend(ga, {'KIOPS basis ($K$)', 'Block formulation ($W$)', ...
-    'Orthonormal basis ($K_{\rm X}$)', 'bound based on $\mathcal F(K)$', ...
-    'bound based on $\mathcal F_{M_{\rm K}}(K)$', ...
-    'bound based on $\mathcal F(W)$'}, ...
-    'interpreter', 'latex', 'FontSize', lg_fontsize, 'Location', 'southwest');
-
 grid on
 box on
-xlabel('Krylov dimension $m$', 'interpreter', 'latex');
-ylabel('Relative error and field-of-values estimate', 'interpreter', 'latex');
+xlabel('Krylov dimension $m$', 'Interpreter', 'latex');
+ylabel('Relative error and field-of-values estimate', 'Interpreter', 'latex');
+ax = gca;
+ax.LineWidth = axlabel_linewidth;
+ax.FontSize = axlabel_fontsize;
 % title(sprintf('%s, $n=%d$, $s=%d$', result.mat_label, result.n, result.s), 'interpreter', 'latex');
-
-set(gca,'linewidth', axlabel_linewidth)
-set(gca,'fontsize', axlabel_fontsize)
 set_m_axis(result.mvals)
 
 positive_vals = [result.err_kiops(:); result.err_W(:); result.err_X(:); ...
@@ -101,6 +96,14 @@ positive_vals = positive_vals(isfinite(positive_vals) & positive_vals > 0);
 if ~isempty(positive_vals)
     ylim([max(1e-16, min(positive_vals)/5), max(positive_vals)*5])
 end
+
+lgd = legend(ga, {'KIOPS basis ($K$)', 'Block formulation ($W$)', ...
+    'Orthonormal basis ($K_{\rm X}$)', 'bound based on $\mathcal F(K)$', ...
+    'bound based on $\mathcal F_{M_{\rm K}}(K)$', ...
+    'bound based on $\mathcal F(W)$'}, ...
+    'Interpreter', 'latex', 'FontSize', lg_fontsize, 'Location', 'southwest');
+drawnow;
+increase_legend_width(lgd, 1.1);
 
 end
 
