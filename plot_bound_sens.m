@@ -60,7 +60,6 @@ for k = 1:num_cases
             'Interpreter', 'latex', ...
             'FontSize', lg_fontsize, 'Location', 'southwest');
         drawnow;
-        increase_legend_width(lgd, 1.1);
     end
 end
 
