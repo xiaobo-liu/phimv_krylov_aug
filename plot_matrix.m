@@ -105,6 +105,48 @@ lgd = legend(ga, {'KIOPS basis ($K$)', 'Block formulation ($W$)', ...
 drawnow;
 increase_legend_width(lgd, 1.1);
 
+%% Illustration of Proposition 5.5 for Poisson example
+if isfield(result,'est_cheb')
+    figs.error_sym = figure;
+    clf(figs.error_sym)
+    set(figs.error_sym, 'Color', 'w', 'Units', 'inches', 'Position', [1,1,5.5,4.5]);
+    hold on
+    
+    ga(1) = semilogy(result.mvals, result.err_W, 's-', 'Color', color_W, ...
+        'LineWidth', lg_linewidth, 'MarkerSize', lg_markersize);
+    ga(2) = semilogy(result.mvals, result.est_K, '--', 'Color', color_K, ...
+        'LineWidth', lg_linewidth_bnd);
+    ga(3) = semilogy(result.mvals, result.est_W, '-.', 'Color', color_W, ...
+        'LineWidth', lg_linewidth_bnd);
+    ga(4) = semilogy(result.mvals, result.est_cheb, '-.', 'Color', color_MK, ...
+        'LineWidth', lg_linewidth_bnd);
+    
+    % Error panel in logarithmic scale.
+    set(gca, 'YScale', 'log')
+    grid on
+    box on
+    xlabel('Krylov dimension $m$', 'Interpreter', 'latex');
+    ylabel('Relative error and field-of-values estimate', 'Interpreter', 'latex');
+    ax = gca;
+    ax.LineWidth = axlabel_linewidth;
+    ax.FontSize = axlabel_fontsize;
+    % title(sprintf('%s, $n=%d$, $s=%d$', result.mat_label, result.n, result.s), 'interpreter', 'latex');
+    set_m_axis(result.mvals)
+    
+    positive_vals = [result.err_W(:); result.est_K(:); result.est_cheb(:); result.est_W(:)];
+    positive_vals = positive_vals(isfinite(positive_vals) & positive_vals > 0);
+    if ~isempty(positive_vals)
+        ylim([max(1e-16, min(positive_vals)/5), max(positive_vals)*5])
+    end
+    
+    lgd = legend(ga, {'error', 'bound based on $\mathcal F(K)$', ...
+        'bound based on $\mathcal F(W)$', 'bound based on Proposition 5.5'}, ...
+        'Interpreter', 'latex', 'FontSize', lg_fontsize, 'Location', 'southwest');
+    drawnow;
+    increase_legend_width(lgd, 1.1);
+end
+
+
 end
 
 function set_m_axis(mvals)

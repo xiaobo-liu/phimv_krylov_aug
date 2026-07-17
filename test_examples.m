@@ -56,7 +56,10 @@ for k = 1:num_mats
         fullfile(fig_dir, sprintf('comparison_fov_%s', matname)));
     save_test_fig(figs.error, ...
         fullfile(fig_dir, sprintf('comparison_error_%s', matname)));
-    
+    if isfield(figs,'error_sym')
+        save_test_fig(figs.error_sym, ...
+            fullfile(fig_dir, sprintf('comparison_error_%s_sym', matname)));
+    end
     % Leave figures open so run_all_test shows the generated plots.
     % close(figs.fov)
     % close(figs.error)

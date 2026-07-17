@@ -58,6 +58,10 @@ est_K  = converg_bestpoly_bnd(range_K,  norm(aug.c), norm_y, mvals, crouzeix);
 est_MK = converg_bestpoly_bnd(range_MK, norm(aug.b), norm_y, mvals, crouzeix);
 est_W  = converg_bestpoly_bnd(range_W,  norm(aug.b), norm_y, mvals, crouzeix);
 
+if strcmp(matname,'poisson')
+    est_cheb = converg_sym_bnd(range_A,  norm(aug.b), norm_y, mvals, crouzeix, s);
+end
+
 % Residual tests for W*Q_K = Q_K*K and W*Q_X = Q_X*K_X.
 res_K = norm(full(aug.W*aug.QK - aug.QK*aug.K), 'fro') / ...
     max(norm(full(aug.W*aug.QK), 'fro'), realmin);
@@ -82,6 +86,9 @@ result.err_X = err_X;
 result.est_K = est_K;
 result.est_MK = est_MK;
 result.est_W = est_W;
+if strcmp(matname,'poisson')
+    result.est_cheb = est_cheb;
+end
 
 result.range_K = range_K;
 result.range_MK = range_MK;
