@@ -27,7 +27,7 @@ tlo = tiledlayout(fig, num_rows, num_cols, ...
 for k = 1:num_cases
     result = results{k};
 
-    nexttile(tlo)
+    ax = nexttile(tlo);
     hold on
     ga(1) = semilogy(result.mvals, result.err_kiops, 'o-', ...
         'Color', color_K, 'LineWidth', lg_linewidth, ...
@@ -43,7 +43,6 @@ for k = 1:num_cases
     xlabel('Krylov dimension $m$', 'Interpreter', 'latex');
     ylabel('Relative error and field-of-values estimate', 'Interpreter', 'latex');
     title(case_title(result, sens_name), 'Interpreter', 'latex');
-    ax = gca;
     ax.LineWidth = axlabel_linewidth;
     ax.FontSize = axlabel_fontsize;
     set_m_axis(result.mvals)
@@ -54,14 +53,16 @@ for k = 1:num_cases
         % Keep all positive curves visible on the logarithmic scale.
         ylim([max(1e-16, min(positive_vals)/5), max(positive_vals)*5])
     end
-    if k == 1 % only one (same) legend needed in the plots
+    if k == 1
         lgd = legend(ga, {'error', 'bound based on $\mathcal F(K)$', ...
             'bound based on $\mathcal F_{M_{\rm K}}(K)$'}, ...
             'Interpreter', 'latex', ...
             'FontSize', lg_fontsize, 'Location', 'southwest');
-        drawnow;
     end
 end
+
+drawnow;
+increase_legend_width(lgd, 1.1);
 
 end
 
