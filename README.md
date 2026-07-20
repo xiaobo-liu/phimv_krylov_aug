@@ -1,8 +1,8 @@
-# An augmented Krylov framework for computing the actions of matrix $\varphi$-functions
+# Field-of-values analysis of augmented Krylov methods for matrix $\varphi$-function actions
 
 This repository contains the MATLAB code and manuscript files for the technical report:
 
-X. Liu and M. Schweitzer. *An augmented Krylov framework for computing the actions of matrix $\varphi$-functions*.
+X. Liu and M. Schweitzer. *Field-of-values analysis of augmented Krylov methods for matrix $\varphi$-function actions*.
 
 ## The main scripts and functions
 
@@ -12,7 +12,7 @@ The script `run_all_test.m` is the main driver for reproducing the numerical exp
 
 The function `phimv_kry_aug.m` computes a linear combination of matrix $\varphi$-function actions using one of the augmented Krylov realizations.
 
-The function `fov_krylov_comparison.m` runs one field-of-values and Krylov convergence comparison. The scripts `test_examples.m` and `test_rhs.m` organize the five model examples and the right-hand-side sensitivity experiments, respectively.
+The function `fov_krylov_comparison.m` runs one field-of-values and Krylov convergence comparison. The scripts `test_examples.m` and `test_rhs.m` run the five model examples and the right-hand-side sensitivity experiments, respectively.
 
 ## Replicating the results in the paper
 
@@ -35,7 +35,7 @@ Setting either switch to `true` regenerates the corresponding data before plotti
 
 ## Acknowledgment
 
-Both authors are participants in the scientific network "The $f(A)b$ulous scientific network on matrix functions and exponential integrators", supported by Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) under project number 566049107.
+Both authors are members of the scientific network "The $f(A)b$ulous scientific network on matrix functions and exponential integrators", supported by Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) under project number 566049107.
 
 ## License
 
