@@ -1,8 +1,8 @@
 # Field-of-values analysis of augmented Krylov methods for matrix $\varphi$-function actions
 
-This repository contains the MATLAB code and manuscript files for the technical report:
+This repository contains the MATLAB code for the technical report:
 
-X. Liu and M. Schweitzer. *Field-of-values analysis of augmented Krylov methods for matrix $\varphi$-function actions*.
+X. Liu and M. Schweitzer. [*Field-of-values analysis of augmented Krylov methods for matrix $\varphi$-function actions*](https://arxiv.org/abs/2607.17819). arXiv:2607.17819 [math.NA], July 2026.
 
 ## The main scripts and functions
 
