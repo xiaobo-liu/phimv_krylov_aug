@@ -9,8 +9,8 @@ if ~isempty(code_dir), cd(code_dir); end
 run_tests = struct();
 
 % If false, current stored data are loaded and the plots are rebuilt.
-run_tests.examples = false; % "run_tests.examples = true" takes about 30 minutes
-run_tests.rhs = false;      % "run_tests.rhs = true" takes about 120 minutes
+run_tests.examples = true; % "run_tests.examples = true" takes about 30 minutes
+run_tests.rhs = true;      % "run_tests.rhs = true" takes about 120 minutes
 
 n = 40;
 m_max = 30;
