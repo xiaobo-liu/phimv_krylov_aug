@@ -2,7 +2,7 @@
 
 This repository contains the MATLAB code for the technical report:
 
-X. Liu and M. Schweitzer. [*Field-of-values analysis of augmented Krylov methods for matrix $\varphi$-function actions*](https://arxiv.org/abs/2607.17819). arXiv:2607.17819 [math.NA], July 2026.
+X. Liu and M. Schweitzer. [*Field-of-values analysis of augmented Krylov methods for matrix φ-function actions*](https://arxiv.org/abs/2607.17819). arXiv:2607.17819 [math.NA], July 2026.
 
 ## The main scripts and functions
 
@@ -35,7 +35,7 @@ Setting either switch to `true` regenerates the corresponding data before plotti
 
 ## Acknowledgment
 
-Both authors are members of the scientific network "The $f(A)b$ulous scientific network on matrix functions and exponential integrators", supported by Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) under project number 566049107.
+Both authors are members of the scientific network "The f(A)bulous scientific network on matrix functions and exponential integrators", supported by Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) under project number 566049107.
 
 ## License
 
